@@ -4,7 +4,7 @@ defmodule AbsintheRelay.Mixfile do
   @version "1.2.0"
 
   def project do
-    [app: :absinthe_relay,
+    [app: :absinthe_relay_oxo,
      version: @version,
      elixir: "~> 1.3",
      elixirc_paths: elixirc_paths(Mix.env),
