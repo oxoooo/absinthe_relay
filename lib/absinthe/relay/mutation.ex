@@ -85,7 +85,11 @@ defmodule Absinthe.Relay.Mutation do
   # client mutation ID as part of the response.
   def resolve_with_input(designer_resolver) do
     fn
-      %{input: %{client_mutation_id: mut_id} = input}, info ->
+      %{input: input}, info ->
+        mut_id = case input do
+          %{client_mutation_id: mut_id} -> mut_id
+          other -> random_string
+        end
         case Absinthe.Resolution.call(designer_resolver, input, info) do
           {flag, value} when is_map(value) ->
             {flag, Map.put(value, :client_mutation_id, mut_id)}
@@ -99,6 +103,10 @@ defmodule Absinthe.Relay.Mutation do
   end
   def resolve_with_input(_, info, designer_resolver) do
     Absinthe.Resolution.call(designer_resolver, %{}, info)
+  end
+
+  defp random_string(length \\ 32) do
+    :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
   end
 
 end
