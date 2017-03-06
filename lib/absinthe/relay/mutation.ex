@@ -88,7 +88,7 @@ defmodule Absinthe.Relay.Mutation do
       %{input: input}, info ->
         mut_id = case input do
           %{client_mutation_id: mut_id} -> mut_id
-          other -> random_string
+          _ -> random_string()
         end
         case Absinthe.Resolution.call(designer_resolver, input, info) do
           {flag, value} when is_map(value) ->
@@ -105,7 +105,7 @@ defmodule Absinthe.Relay.Mutation do
     Absinthe.Resolution.call(designer_resolver, %{}, info)
   end
 
-  defp random_string(length \\ 32) do
+  def random_string(length \\ 32) do
     :crypto.strong_rand_bytes(length) |> Base.url_encode64 |> binary_part(0, length)
   end
 
